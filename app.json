@@ -7,6 +7,12 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+     "permissions": [
+      "CAMERA",
+      "MEDIA_LIBRARY", 
+      "READ_EXTERNAL_STORAGE", 
+      "WRITE_EXTERNAL_STORAGE" 
+    ],
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -16,6 +22,10 @@
       "supportsTablet": true
     },
     "android": {
+        "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE" 
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

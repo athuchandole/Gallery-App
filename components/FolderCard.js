@@ -1,102 +1,129 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 
 const FolderCard = ({ folder, onOpen, onAdvance }) => {
-    return (
-        <View style={styles.container}>
-            <View style={styles.leftSection}>
-                {folder.thumb ? (
-                    <Image source={{ uri: folder.thumb }} style={styles.thumbnail} />
-                ) : (
-                    <View style={styles.placeholder}>
-                        <Text style={styles.placeholderText}>img</Text>
-                    </View>
-                )}
-                <Text style={styles.folderName}>{folder.title}</Text>
-            </View>
+  return (
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onOpen}
+      activeOpacity={0.8}
+    >
+      <View style={styles.content}>
+        {folder.thumb ? (
+          <Image
+            source={{ uri: folder.thumb }}
+            style={styles.thumbnail}
+            resizeMode="contain"
+            accessible
+            accessibilityLabel={`${folder.title} thumbnail`}
+          />
+        ) : (
+          <View style={styles.placeholder}>
+            <Text style={styles.placeholderText}>img</Text>
+          </View>
+        )}
 
-            <View style={styles.rightSection}>
-                <TouchableOpacity style={[styles.button, styles.openButton]} onPress={onOpen}>
-                    <Text style={styles.buttonText}>Open</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.advanceButton]} onPress={onAdvance}>
-                    <Text style={styles.buttonText}>Advance</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+        <Text style={styles.folderName} numberOfLines={1} ellipsizeMode="tail">
+          {folder.title}
+        </Text>
+
+        {/* Asset count */}
+        <Text style={styles.assetCount}>
+          {folder.assetCount} {folder.assetCount === 1 ? "item" : "items"}
+        </Text>
+
+        <TouchableOpacity
+          style={[styles.button, styles.deleteButton]}
+          onPress={onAdvance}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={`Delete ${folder.title}`}
+        >
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
 };
 
+const { width } = Dimensions.get("window");
+const cardWidth = width > 600 ? (width - 80) / 2 : (width - 60) / 2;
+
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#f9f2ff',
-        borderWidth: 2,
-        borderColor: '#a684e4',
-        borderRadius: 15,
-        padding: 12,
-        marginVertical: 8,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 2, height: 2 },
-        shadowRadius: 5,
-    },
-    leftSection: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
-    },
-    placeholder: {
-        width: 60,
-        height: 60,
-        borderWidth: 2,
-        borderColor: '#ff9a76',
-        backgroundColor: '#ffe8d6',
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 10,
-    },
-    placeholderText: {
-        fontSize: 20,
-        fontWeight: '400',
-        color: '#ff6f61',
-    },
-    folderName: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#6a0dad',
-    },
-    rightSection: {
-        flexDirection: 'row',
-    },
-    button: {
-        borderRadius: 10,
-        paddingHorizontal: 15,
-        paddingVertical: 6,
-        marginLeft: 8,
-    },
-    openButton: {
-        backgroundColor: '#8ecae6',
-    },
-    advanceButton: {
-        backgroundColor: '#f4a261',
-    },
-    buttonText: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#fff',
-    },
-    thumbnail: {
-        width: 60,
-        height: 60,
-        borderRadius: 10,
-        marginRight: 10,
-        borderWidth: 2,
-        borderColor: '#6a0dad',
-    },
+  container: {
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#d8b4fe",
+    borderRadius: 16,
+    padding: 16,
+    margin: 8,
+    width: cardWidth,
+    shadowColor: "#000",
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  content: {
+    alignItems: "center",
+  },
+  placeholder: {
+    width: 64,
+    height: 64,
+    borderWidth: 1,
+    borderColor: "#fb923c",
+    backgroundColor: "#ffedd5",
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  placeholderText: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#f97316",
+  },
+  folderName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#4c1d95",
+    marginBottom: 4,
+    textAlign: "center",
+  },
+  assetCount: {
+    fontSize: 14,
+    color: "#6b7280", // Tailwind gray-500
+    marginBottom: 12,
+  },
+  button: {
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  deleteButton: {
+    backgroundColor: "#ef4444",
+  },
+  buttonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#ffffff",
+    textAlign: "center",
+  },
+  thumbnail: {
+    width: "100%",
+    height: 80,
+    borderRadius: 12,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: "#4c1d95",
+  },
 });
 
 export default FolderCard;
