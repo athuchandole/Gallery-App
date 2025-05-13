@@ -1,8 +1,12 @@
 import React from 'react';
-import { View, FlatList, Image, Text, StyleSheet } from 'react-native';
+import { View, FlatList, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const ImageScreen = ({ route }) => {
+const ImageScreen = ({ route, navigation }) => {
     const { folder } = route.params;
+
+    const handleImageClick = (image) => {
+        navigation.navigate('ViewerScreen', { image });
+    };
 
     return (
         <View style={styles.container}>
@@ -13,12 +17,14 @@ const ImageScreen = ({ route }) => {
                 data={folder.assets}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View style={styles.imageContainer}>
-                        <Image
-                            source={{ uri: item.uri }}
-                            style={styles.image}
-                        />
-                    </View>
+                    <TouchableOpacity onPress={() => handleImageClick(item)}>
+                        <View style={styles.imageContainer}>
+                            <Image
+                                source={{ uri: item.uri }}
+                                style={styles.image}
+                            />
+                        </View>
+                    </TouchableOpacity>
                 )}
             />
         </View>

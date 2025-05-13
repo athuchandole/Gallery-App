@@ -6,8 +6,11 @@ const ViewerScreen = ({ route, navigation }) => {
     const { image } = route.params;
 
     return (
-        <View>
-            <ImageViewer image={image} onClose={() => navigation.goBack()} />
+        <View style={{ flex: 1 }}>
+            <ImageViewer
+                image={image}
+                onClose={() => navigation.goBack()}
+            />
         </View>
     );
 };
