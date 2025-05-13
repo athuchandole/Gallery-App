@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Alert, Text, ActivityIndicator, StyleSheet, FlatList, Button } from 'react-native';
+import {
+    View,
+    Alert,
+    Text,
+    ActivityIndicator,
+    StyleSheet,
+    FlatList,
+} from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
+import FolderCard from '../components/FolderCard';
 
 const FolderScreen = ({ navigation }) => {
     const [folders, setFolders] = useState([]);
@@ -30,24 +38,39 @@ const FolderScreen = ({ navigation }) => {
     const fetchFolders = async () => {
         try {
             const albums = await MediaLibrary.getAlbumsAsync();
+            let foldersWithThumbs = [];
 
             if (albums.length === 0) {
                 const allAssets = await MediaLibrary.getAssetsAsync({
                     mediaType: MediaLibrary.MediaType.photo,
-                    first: 100,
+                    first: 1,
                 });
 
-                setFolders([
+                foldersWithThumbs = [
                     {
                         id: 'all',
                         title: 'All Photos',
                         assetCount: allAssets.totalCount,
+                        thumb: allAssets.assets[0]?.uri || null,
                         assets: allAssets.assets,
                     },
-                ]);
+                ];
             } else {
-                setFolders(albums);
+                for (const album of albums) {
+                    const assets = await MediaLibrary.getAssetsAsync({
+                        album,
+                        mediaType: MediaLibrary.MediaType.photo,
+                        first: 1,
+                    });
+
+                    foldersWithThumbs.push({
+                        ...album,
+                        thumb: assets.assets[0]?.uri || null,
+                    });
+                }
             }
+
+            setFolders(foldersWithThumbs);
         } catch (err) {
             console.log('Error fetching folders:', err);
             Alert.alert('Error', 'Failed to load media folders.');
@@ -105,16 +128,11 @@ const FolderScreen = ({ navigation }) => {
                 data={folders}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <View style={styles.folderItem}>
-                        <Text style={styles.folderName}>
-                            {item.title} ({item.assetCount ?? item.assets?.length ?? 0})
-                        </Text>
-                        <View style={styles.buttonGroup}>
-                            <Button title="Open" onPress={() => handleSelectFolder(item)} />
-                            <View style={{ width: 10 }} />
-                            <Button title="Advance" onPress={() => handleAdvanceView(item)} />
-                        </View>
-                    </View>
+                    <FolderCard
+                        folder={item}
+                        onOpen={() => handleSelectFolder(item)}
+                        onAdvance={() => handleAdvanceView(item)}
+                    />
                 )}
             />
         </View>
@@ -129,21 +147,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    folderItem: {
-        marginBottom: 15,
-        borderBottomWidth: 1,
-        borderColor: '#ccc',
-        paddingBottom: 10,
-    },
-    folderName: {
-        fontSize: 18,
-        fontWeight: '600',
-        marginBottom: 8,
-    },
-    buttonGroup: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
     },
 });
 
