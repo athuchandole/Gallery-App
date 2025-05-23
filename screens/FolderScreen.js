@@ -6,8 +6,10 @@ import {
   ActivityIndicator,
   StyleSheet,
   FlatList,
+  StatusBar,
 } from "react-native";
 import * as MediaLibrary from "expo-media-library";
+import LinearGradient from "react-native-linear-gradient";
 import FolderCard from "../components/FolderCard";
 
 const FolderScreen = ({ navigation }) => {
@@ -65,11 +67,11 @@ const FolderScreen = ({ navigation }) => {
             mediaType: MediaLibrary.MediaType.photo,
             first: 1,
           });
-        if(assets.assets[0]?.uri)
-          foldersWithThumbs.push({
-            ...album,
-            thumb: assets.assets[0]?.uri || null,
-          });
+          if (assets.assets[0]?.uri)
+            foldersWithThumbs.push({
+              ...album,
+              thumb: assets.assets[0]?.uri || null,
+            });
         }
       }
 
@@ -120,15 +122,21 @@ const FolderScreen = ({ navigation }) => {
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color="gray" />
-        <Text>Loading folders...</Text>
-      </View>
+      <LinearGradient
+        colors={["#e0e7ff", "#fdf2f8"]}
+        style={styles.center}
+      >
+        <ActivityIndicator size="large" color="#6d28d9" />
+        <Text style={styles.loadingText}>Loading folders...</Text>
+      </LinearGradient>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={["#e0e7ff", "#fdf2f8"]}
+      style={styles.container}
+    >
       <FlatList
         data={folders}
         keyExtractor={(item) => item.id.toString()}
@@ -139,23 +147,37 @@ const FolderScreen = ({ navigation }) => {
             onAdvance={() => handleAdvanceView(item)}
           />
         )}
-        numColumns={2} // 💡 Key change to make 2 cards per row
-        contentContainerStyle={{ paddingBottom: 16 }}
-        columnWrapperStyle={{ justifyContent: "space-between" }} // adds space between two cards
+        numColumns={2}
+        contentContainerStyle={styles.flatListContainer}
+        columnWrapperStyle={styles.columnWrapper}
+        showsVerticalScrollIndicator={false}
       />
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
-    backgroundColor: "white",
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: StatusBar.currentHeight+5,
+  },
+  flatListContainer: {
+    paddingBottom: 32,
+  },
+  columnWrapper: {
+    justifyContent: "space-between",
+    marginBottom: 16,
   },
   center: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#4b5563", // Tailwind gray-600
   },
 });
 

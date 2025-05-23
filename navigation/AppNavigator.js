@@ -10,10 +10,10 @@ const Stack = createStackNavigator();
 const AppNavigator = () => {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="FolderScreen" component={FolderScreen} options={{ title: 'Folders' }} />
-            <Stack.Screen name="ImageScreen" component={ImageScreen} options={{ title: 'Images' }} />
-            <Stack.Screen name="ViewerScreen" component={ViewerScreen} options={{ title: 'Viewer' }} />
-            <Stack.Screen name="SwiperScreen" component={SwiperScreen} options={{ title: 'Swiper View' }} />
+            <Stack.Screen name="FolderScreen" component={FolderScreen} options={{ title: 'Folders',headerShown:false }} />
+            <Stack.Screen name="ImageScreen" component={ImageScreen} options={{ title: 'Images' ,headerShown:false }} />
+            <Stack.Screen name="ViewerScreen" component={ViewerScreen} options={{ title: 'Viewer',headerShown:false  }} />
+            <Stack.Screen name="SwiperScreen" component={SwiperScreen} options={{ title: 'Swiper View' ,headerShown:false }} />
         </Stack.Navigator>
     );
 };
